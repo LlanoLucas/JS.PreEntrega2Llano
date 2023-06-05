@@ -33,38 +33,38 @@ function pedirCantidad(tipo) {
   return respuesta;
 }
 
-let cantidadOriginal = pedirCantidad(original.sabor);
-let cantidadJamon = pedirCantidad(jamon.sabor);
-let cantidadQueso = pedirCantidad(queso.sabor);
-let cantidadOregano = pedirCantidad(oregano.sabor);
-let cantidadCebolla = pedirCantidad(cebolla.sabor);
+let cantidades = [
+  pedirCantidad(original.sabor),
+  pedirCantidad(jamon.sabor),
+  pedirCantidad(queso.sabor),
+  pedirCantidad(oregano.sabor),
+  pedirCantidad(cebolla.sabor),
+];
 
 function pushearResumen(saborObjecto, cantidades) {
-  if (cantidades != 0) {
+  if (cantidades > 0) {
     return resumen.push(`${saborObjecto}: ${cantidades} unidades`);
   }
 }
 
 let resumen = [];
 
-pushearResumen(original.sabor, cantidadOriginal);
-pushearResumen(jamon.sabor, cantidadJamon);
-pushearResumen(queso.sabor, cantidadQueso);
-pushearResumen(oregano.sabor, cantidadOregano);
-pushearResumen(cebolla.sabor, cantidadCebolla);
+pushearResumen(original.sabor, cantidades[0]);
+pushearResumen(jamon.sabor, cantidades[1]);
+pushearResumen(queso.sabor, cantidades[2]);
+pushearResumen(oregano.sabor, cantidades[3]);
+pushearResumen(cebolla.sabor, cantidades[4]);
 
 console.log(`    \nResumen de Compra\n     `);
 
-for (producto of resumen) {
-  console.log(producto);
-}
+resumen.forEach((element) => {
+  console.log(element);
+});
 
-let subtotal =
-  original.precio * cantidadOriginal +
-  jamon.precio * cantidadJamon +
-  queso.precio * cantidadQueso +
-  oregano.precio * cantidadOregano +
-  cebolla.precio * cantidadCebolla;
+let subtotal = cantidades.reduce(
+  (acumulador, cantidades) => acumulador + cantidades * original.precio,
+  0
+);
 
 console.log(` \nSubtotal sin IVA: $${subtotal}\n `);
 
@@ -74,11 +74,9 @@ queso.sumarIva();
 oregano.sumarIva();
 cebolla.sumarIva();
 
-let total =
-  original.precio * cantidadOriginal +
-  jamon.precio * cantidadJamon +
-  queso.precio * cantidadQueso +
-  oregano.precio * cantidadOregano +
-  cebolla.precio * cantidadCebolla;
+let total = cantidades.reduce(
+  (acumulador, cantidades) => acumulador + cantidades * original.precio,
+  0
+);
 
 console.log(` \nTotal: $${total}\n `);
