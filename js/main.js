@@ -1,82 +1,131 @@
-alert(`Bienvenido a Donatto`);
-class Talita {
-  constructor(sabor) {
-    this.precio = 600;
-    this.sabor = sabor.toUpperCase();
+class Carrito {
+  constructor() {
+    this.productos = [];
   }
 
-  sumarIva() {
-    this.precio = this.precio * 1.21;
+  generarId() {
+    let max = 0;
+
+    this.productos.forEach((item) => {
+      if (item.id > max) {
+        max = item.id;
+      }
+    });
+
+    return max + 1;
+  }
+
+  agregarProducto(nombre, cantidad) {
+    this.precio = 600;
+    this.productos.push({
+      id: this.generarId(),
+      nombre: nombre,
+      precio: this.precio,
+      cantidad: cantidad,
+    });
+  }
+
+  eliminarProducto(id) {
+    this.productos = this.productos.filter((prod) => prod.id != id);
+  }
+
+  totalProductos() {
+    return this.productos.length;
+  }
+
+  valorTotal() {
+    return this.productos.reduce(
+      (total, item) => total + item.precio * item.cantidad,
+      0
+    );
+  }
+
+  valorTotalConIVA() {
+    return this.valorTotal() * 1.21;
+  }
+
+  escribirResumen() {
+    let resumen = "Resumen de compra\n\n";
+
+    this.productos.forEach((element) => {
+      resumen += `(${element.id}) ${element.nombre}: x${element.cantidad} unidades\n`;
+    });
+
+    return resumen;
   }
 }
 
-const original = new Talita("original");
-const jamon = new Talita("jamon");
-const queso = new Talita("queso");
-const oregano = new Talita("oregano");
-const cebolla = new Talita("cebolla");
+alert("Bienvenido a Donatto!");
 
-function pedirCantidad(tipo) {
-  respuesta = parseInt(
-    prompt(
-      `¿Cuántas talitas de ${tipo} vas a querer?\nIngresa un valor numérico`
-    )
+let producto = "";
+
+let cantidad = 0;
+
+const carrito = new Carrito();
+
+// Agregamos Productos
+while (producto.toUpperCase() != "ESC") {
+  producto = prompt(
+    "¿Que talita te vas a llevar?\nOpciones: Original, Jamon, Queso, Oregano, Cebolla.\n(para salir escribe: ESC)"
+  ).toUpperCase();
+
+  if (producto.toUpperCase() == "ESC") {
+    break;
+  }
+
+  while (
+    producto.toUpperCase() != "ORIGINAL" &&
+    producto.toUpperCase() != "JAMON" &&
+    producto.toUpperCase() != "QUESO" &&
+    producto.toUpperCase() != "OREGANO" &&
+    producto.toUpperCase() != "CEBOLLA"
+  ) {
+    producto = prompt(
+      "INGRESA UN VALOR VÁLIDO:\n\n¿Que talita te vas a llevar?\nOpciones: Original, Jamon, Queso, Oregano, Cebolla.\n(para salir escribe: ESC)"
+    ).toUpperCase();
+  }
+
+  cantidad = parseInt(
+    prompt(`Ingresá cuántas talitas de ${producto} quiere llevar:`)
   );
 
-  while (Number.isInteger(respuesta) == false) {
-    respuesta = parseInt(
+  while (Number.isInteger(cantidad) === false) {
+    cantidad = parseInt(
       prompt(
-        `INGRESA UN VALOR VÁLIDO\n¿Cuántas talitas de ${tipo} vas a querer?\nIngresa un valor numérico`
+        `INGRESE UN SABOR VÁLIDO:\n\nCuántas talitas de ${producto} quiere llevar:`
       )
     );
   }
-  return respuesta;
+
+  carrito.agregarProducto(producto, cantidad);
 }
 
-let cantidades = [
-  pedirCantidad(original.sabor),
-  pedirCantidad(jamon.sabor),
-  pedirCantidad(queso.sabor),
-  pedirCantidad(oregano.sabor),
-  pedirCantidad(cebolla.sabor),
-];
+if (carrito.totalProductos() > 0) {
+  let id;
 
-function pushearResumen(saborObjecto, cantidades) {
-  if (cantidades > 0) {
-    return resumen.push(`${saborObjecto}: ${cantidades} unidades`);
+  // Eliminar Productos
+  while (id != 0) {
+    id = parseInt(
+      prompt(
+        carrito.escribirResumen() +
+          "\nQuerés eliminar un producto? Ingresá su ID:\n(ESCRIBAR 0 PARA SALIR)"
+      )
+    );
+
+    if (id > 0) {
+      carrito.eliminarProducto(id);
+    }
+
+    if (carrito.totalProductos() == 0) {
+      break;
+    }
   }
+
+  alert(
+    `${carrito.escribirResumen()}\nSubtotal sin IVA: $${carrito.valorTotal()}\nTotal con IVA: $${carrito.valorTotalConIVA()}`
+  );
+} else {
+  alert("No se encontraron Productos agregados en el Carrito!");
 }
 
-let resumen = [];
-
-pushearResumen(original.sabor, cantidades[0]);
-pushearResumen(jamon.sabor, cantidades[1]);
-pushearResumen(queso.sabor, cantidades[2]);
-pushearResumen(oregano.sabor, cantidades[3]);
-pushearResumen(cebolla.sabor, cantidades[4]);
-
-console.log(`    \nResumen de Compra\n     `);
-
-resumen.forEach((element) => {
-  console.log(element);
-});
-
-let subtotal = cantidades.reduce(
-  (acumulador, cantidades) => acumulador + cantidades * original.precio,
-  0
-);
-
-console.log(` \nSubtotal sin IVA: $${subtotal}\n `);
-
-original.sumarIva();
-jamon.sumarIva();
-queso.sumarIva();
-oregano.sumarIva();
-cebolla.sumarIva();
-
-let total = cantidades.reduce(
-  (acumulador, cantidades) => acumulador + cantidades * original.precio,
-  0
-);
-
-console.log(` \nTotal: $${total}\n `);
+console.log(carrito);
