@@ -3,7 +3,7 @@ class Carrito {
     this.productos = [];
   }
 
-  generarId() {
+  crearId() {
     let max = 0;
 
     this.productos.forEach((item) => {
@@ -15,10 +15,10 @@ class Carrito {
     return max + 1;
   }
 
-  agregarProducto(nombre, cantidad) {
+  pushearProducto(nombre, cantidad) {
     this.precio = 600;
     this.productos.push({
-      id: this.generarId(),
+      id: this.crearId(),
       nombre: nombre,
       precio: this.precio,
       cantidad: cantidad,
@@ -29,7 +29,7 @@ class Carrito {
     this.productos = this.productos.filter((prod) => prod.id != id);
   }
 
-  totalProductos() {
+  cantidadProductos() {
     return this.productos.length;
   }
 
@@ -63,13 +63,12 @@ let cantidad = 0;
 
 const carrito = new Carrito();
 
-// Agregamos Productos
-while (producto.toUpperCase() != "ESC") {
+while (producto.toUpperCase() != "SEG") {
   producto = prompt(
-    "¿Que talita te vas a llevar?\nOpciones: Original, Jamon, Queso, Oregano, Cebolla.\n(para salir escribe: ESC)"
+    "¿Que talita te vas a llevar?\nOpciones: Original, Jamon, Queso, Oregano, Cebolla.\n(para seguir la compra escribe: SEG)"
   ).toUpperCase();
 
-  if (producto.toUpperCase() == "ESC") {
+  if (producto.toUpperCase() == "SEG") {
     break;
   }
 
@@ -81,12 +80,12 @@ while (producto.toUpperCase() != "ESC") {
     producto.toUpperCase() != "CEBOLLA"
   ) {
     producto = prompt(
-      "INGRESA UN VALOR VÁLIDO:\n\n¿Que talita te vas a llevar?\nOpciones: Original, Jamon, Queso, Oregano, Cebolla.\n(para salir escribe: ESC)"
+      "INGRESA UN VALOR VÁLIDO:\n\n¿Que talita te vas a llevar?\nOpciones: Original, Jamon, Queso, Oregano, Cebolla.\n(para seguir la compra escribe: SEG)"
     ).toUpperCase();
   }
 
   cantidad = parseInt(
-    prompt(`Ingresá cuántas talitas de ${producto} quiere llevar:`)
+    prompt(`Ingresá cuántas talitas de ${producto} querés llevar:`)
   );
 
   while (Number.isInteger(cantidad) === false) {
@@ -97,10 +96,10 @@ while (producto.toUpperCase() != "ESC") {
     );
   }
 
-  carrito.agregarProducto(producto, cantidad);
+  carrito.pushearProducto(producto, cantidad);
 }
 
-if (carrito.totalProductos() > 0) {
+if (carrito.cantidadProductos() > 0) {
   let id;
 
   // Eliminar Productos
@@ -108,7 +107,7 @@ if (carrito.totalProductos() > 0) {
     id = parseInt(
       prompt(
         carrito.escribirResumen() +
-          "\nQuerés eliminar un producto? Ingresá su ID:\n(ESCRIBAR 0 PARA SALIR)"
+          "\nQuerés eliminar un producto? Ingresá su ID:\n(ESCRIBIR 0 PARA SALIR)"
       )
     );
 
@@ -116,7 +115,7 @@ if (carrito.totalProductos() > 0) {
       carrito.eliminarProducto(id);
     }
 
-    if (carrito.totalProductos() == 0) {
+    if (carrito.cantidadProductos() == 0) {
       break;
     }
   }
@@ -125,7 +124,5 @@ if (carrito.totalProductos() > 0) {
     `${carrito.escribirResumen()}\nSubtotal sin IVA: $${carrito.valorTotal()}\nTotal con IVA: $${carrito.valorTotalConIVA()}`
   );
 } else {
-  alert("No se encontraron Productos agregados en el Carrito!");
+  alert("No te estás llevando nada!");
 }
-
-console.log(carrito);
